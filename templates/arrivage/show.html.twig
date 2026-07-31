@@ -1,0 +1,39 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ arrivage.numero }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ arrivage.numero }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_arrivage_edit', {id: arrivage.id}) }}">Modifier</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Arrivage {{ arrivage.numero }}</h2>
+    <dl class="meta">
+        <div>
+            <dt>Fournisseur</dt>
+            <dd>
+                <a href="{{ path('app_fournisseur_show', {id: arrivage.fournisseur.id}) }}">
+                    {{ arrivage.fournisseur.code }} — {{ arrivage.fournisseur.nom }}
+                </a>
+            </dd>
+        </div>
+        <div>
+            <dt>Origine</dt>
+            <dd>{{ arrivage.origine }}</dd>
+        </div>
+        <div>
+            <dt>Poids</dt>
+            <dd>{{ arrivage.poids }} kg</dd>
+        </div>
+        <div>
+            <dt>Date</dt>
+            <dd>{{ arrivage.dateArrivage|date('d/m/Y') }}</dd>
+        </div>
+    </dl>
+    <form method="post" action="{{ path('app_arrivage_delete', {id: arrivage.id}) }}" onsubmit="return confirm('Supprimer cet arrivage ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ arrivage.id) }}">
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+</section>
+{% endblock %}

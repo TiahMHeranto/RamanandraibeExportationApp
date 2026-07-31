@@ -12,6 +12,8 @@ Built with **Symfony 7.1**, Doctrine, Twig, and Hotwire (Stimulus + Turbo).
 - Dashboard with live counts
 - **Personnels** CRUD (imported from `ListeDesPersonnels.xlsx` — N° + nom)
 - **Fournisseurs** CRUD (imported from `LISTE FRNS RAPHIA.xlsx` — code, nom, zone)
+- **Hangars** CRUD (hangar numéro + code — traitement)
+- **Arrivages** CRUD (N°, fournisseur, origine, poids, date)
 - **Clients** CRUD (international buyers)
 - **Products** catalog (vanilla, spices, cocoa, oils, …)
 - **Shipments** with cargo lines, ports, status workflow

@@ -3,6 +3,7 @@
 {% block title %}Overview — Ramanandraibe Exportation{% endblock %}
 {% block page_title %}Overview{% endblock %}
 {% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_arrivage_new') }}">Nouvel arrivage</a>
     <a class="btn btn-primary" href="{{ path('app_shipment_new') }}">New shipment</a>
 {% endblock %}
 
@@ -17,21 +18,54 @@
         <strong>{{ fournisseurCount }}</strong>
     </article>
     <article class="stat">
-        <span>Clients</span>
-        <strong>{{ clientCount }}</strong>
+        <span>Hangars</span>
+        <strong>{{ hangarCount }}</strong>
+    </article>
+    <article class="stat accent">
+        <span>Arrivages</span>
+        <strong>{{ arrivageCount }}</strong>
     </article>
     <article class="stat">
-        <span>Active products</span>
-        <strong>{{ productCount }}</strong>
+        <span>Clients</span>
+        <strong>{{ clientCount }}</strong>
     </article>
     <article class="stat">
         <span>Shipments</span>
         <strong>{{ shipmentCount }}</strong>
     </article>
-    <article class="stat accent">
-        <span>In transit</span>
-        <strong>{{ inTransitCount }}</strong>
-    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Derniers arrivages</h2>
+        <a href="{{ path('app_arrivage_index') }}">Voir tout</a>
+    </div>
+    {% if latestArrivages is empty %}
+        <p class="empty">Aucun arrivage pour le moment.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>Fournisseur</th>
+                <th>Origine</th>
+                <th>Poids</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arrivage in latestArrivages %}
+                <tr>
+                    <td><a href="{{ path('app_arrivage_show', {id: arrivage.id}) }}">{{ arrivage.numero }}</a></td>
+                    <td>{{ arrivage.fournisseur.nom }}</td>
+                    <td>{{ arrivage.origine }}</td>
+                    <td>{{ arrivage.poids }} kg</td>
+                    <td>{{ arrivage.dateArrivage|date('d/m/Y') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 </section>
 
 <section class="panel">

@@ -1,0 +1,94 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_class %}{{ parent() }} page-viewport page-arrivages{% endblock %}
+
+{% block title %}Arrivages — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Arrivages{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_arrivage_export_pdf', q ? {q: q} : {}) }}">Exporter PDF</a>
+    <a class="btn btn-primary" href="{{ path('app_arrivage_new') }}">Ajouter</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel panel-fill">
+    <div class="panel-head">
+        <h2>
+            {% if total == 0 %}
+                0 arrivage
+            {% else %}
+                {{ pagination.from }}–{{ pagination.to }} / {{ total }} arrivage{{ total > 1 ? 's' : '' }}
+            {% endif %}
+        </h2>
+        <form method="get" class="search-form" action="{{ path('app_arrivage_index') }}">
+            <input type="search" name="q" value="{{ q }}" placeholder="Rechercher N°, fournisseur, origine…">
+            <button class="btn btn-ghost" type="submit">Filtrer</button>
+            {% if q %}
+                <a class="btn btn-ghost" href="{{ path('app_arrivage_index') }}">Réinitialiser</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if arrivages is empty %}
+        <p class="empty">Aucun arrivage enregistré. Cliquez sur <strong>Ajouter</strong> pour créer le premier.</p>
+    {% else %}
+        <div class="table-scroll">
+            <table class="table table-sticky">
+                <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Fournisseur</th>
+                    <th>Origine</th>
+                    <th>Poids</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for arrivage in arrivages %}
+                    <tr>
+                        <td><a href="{{ path('app_arrivage_show', {id: arrivage.id}) }}"><strong>{{ arrivage.numero }}</strong></a></td>
+                        <td>
+                            <a href="{{ path('app_fournisseur_show', {id: arrivage.fournisseur.id}) }}">
+                                {{ arrivage.fournisseur.nom }}
+                            </a>
+                            <small class="muted">{{ arrivage.fournisseur.code }}</small>
+                        </td>
+                        <td>{{ arrivage.origine }}</td>
+                        <td>{{ arrivage.poids }} kg</td>
+                        <td>{{ arrivage.dateArrivage|date('d/m/Y') }}</td>
+                        <td class="actions">
+                            <a href="{{ path('app_arrivage_edit', {id: arrivage.id}) }}">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.pages > 1 %}
+            <nav class="pagination" aria-label="Pagination arrivages">
+                {% set queryParams = q ? {q: q} : {} %}
+                <a
+                    class="btn btn-ghost {{ pagination.page <= 1 ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page <= 1 ? '#' : path('app_arrivage_index', queryParams|merge({page: pagination.page - 1})) }}"
+                >Précédent</a>
+                <div class="pagination-pages">
+                    {% for p in 1..pagination.pages %}
+                        {% if p == pagination.page %}
+                            <span class="page-chip is-current" aria-current="page">{{ p }}</span>
+                        {% elseif p == 1 or p == pagination.pages or (p >= pagination.page - 2 and p <= pagination.page + 2) %}
+                            <a class="page-chip" href="{{ path('app_arrivage_index', queryParams|merge({page: p})) }}">{{ p }}</a>
+                        {% elseif p == pagination.page - 3 or p == pagination.page + 3 %}
+                            <span class="page-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <a
+                    class="btn btn-ghost {{ pagination.page >= pagination.pages ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page >= pagination.pages ? '#' : path('app_arrivage_index', queryParams|merge({page: pagination.page + 1})) }}"
+                >Suivant</a>
+            </nav>
+        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

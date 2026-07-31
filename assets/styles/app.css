@@ -545,6 +545,13 @@ a.is-disabled {
     margin: 0.5rem 0;
 }
 
+.muted {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+}
+
 .auth-page {
     min-height: 100vh;
 }

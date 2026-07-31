@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FournisseurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,10 +43,15 @@ class Fournisseur
     #[ORM\Column]
     private \DateTimeImmutable $updatedAt;
 
+    /** @var Collection<int, Arrivage> */
+    #[ORM\OneToMany(targetEntity: Arrivage::class, mappedBy: 'fournisseur')]
+    private Collection $arrivages;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->arrivages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +120,12 @@ class Fournisseur
     public function touch(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    /** @return Collection<int, Arrivage> */
+    public function getArrivages(): Collection
+    {
+        return $this->arrivages;
     }
 
     public function __toString(): string

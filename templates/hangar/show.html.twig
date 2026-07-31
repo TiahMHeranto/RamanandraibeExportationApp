@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ hangar.numero }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ hangar.numero }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_hangar_edit', {id: hangar.id}) }}">Modifier</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>{{ hangar.code }}</h2>
+    <dl class="meta">
+        <div>
+            <dt>Hangar numéro</dt>
+            <dd>{{ hangar.numero }}</dd>
+        </div>
+        <div>
+            <dt>Code</dt>
+            <dd>{{ hangar.code }}</dd>
+        </div>
+        <div>
+            <dt>Statut</dt>
+            <dd>{{ hangar.actif ? 'Actif' : 'Inactif' }}</dd>
+        </div>
+        <div>
+            <dt>Mis à jour</dt>
+            <dd>{{ hangar.updatedAt|date('d/m/Y H:i') }}</dd>
+        </div>
+    </dl>
+    <form method="post" action="{{ path('app_hangar_delete', {id: hangar.id}) }}" onsubmit="return confirm('Supprimer ce hangar ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ hangar.id) }}">
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+</section>
+{% endblock %}

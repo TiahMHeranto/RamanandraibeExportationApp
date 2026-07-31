@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des hangars de traitement</title>
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #0b1c2c; margin: 24px; }
+        h1 { font-size: 18px; margin: 0 0 4px; }
+        .meta { color: #31485d; margin-bottom: 18px; font-size: 10px; }
+        .brand { color: #0f766e; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #d5e1e8; padding: 6px 8px; text-align: left; }
+        th { background: #e8f4f2; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+        tr:nth-child(even) td { background: #f7fafb; }
+        .num { width: 30%; font-weight: bold; }
+        .status { width: 14%; }
+        .footer { margin-top: 16px; font-size: 9px; color: #31485d; }
+    </style>
+</head>
+<body>
+    <div class="brand">Ramanandraibe Exportation</div>
+    <h1>Hangars de traitement</h1>
+    <p class="meta">
+        Généré le {{ generatedAt|date('d/m/Y à H:i') }}
+        — {{ total }} enregistrement{{ total > 1 ? 's' : '' }}
+        {% if q %} — Filtre : « {{ q }} »{% endif %}
+    </p>
+    <table>
+        <thead>
+        <tr>
+            <th class="num">Hangar numéro</th>
+            <th>Code</th>
+            <th class="status">Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for hangar in hangars %}
+            <tr>
+                <td class="num">{{ hangar.numero }}</td>
+                <td>{{ hangar.code }}</td>
+                <td class="status">{{ hangar.actif ? 'Actif' : 'Inactif' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="3">Aucun hangar à exporter.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p class="footer">Document généré depuis l’application Ramanandraibe Exportation.</p>
+</body>
+</html>
