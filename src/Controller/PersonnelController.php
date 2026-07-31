@@ -19,11 +19,18 @@ class PersonnelController extends AbstractController
     public function index(Request $request, PersonnelRepository $personnelRepository): Response
     {
         $q = trim((string) $request->query->get('q', ''));
+        $page = max(1, $request->query->getInt('page', 1));
+        $pagination = $personnelRepository->searchPaginated(
+            $q !== '' ? $q : null,
+            $page,
+            15,
+        );
 
         return $this->render('personnel/index.html.twig', [
-            'personnels' => $personnelRepository->search($q !== '' ? $q : null),
+            'personnels' => $pagination['items'],
+            'pagination' => $pagination,
             'q' => $q,
-            'total' => $personnelRepository->count([]),
+            'total' => $pagination['total'],
         ]);
     }
 

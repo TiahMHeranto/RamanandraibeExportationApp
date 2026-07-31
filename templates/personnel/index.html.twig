@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block body_class %}{{ parent() }} page-viewport page-personnels{% endblock %}
+
 {% block title %}Personnels — Ramanandraibe Exportation{% endblock %}
 {% block page_title %}Personnels{% endblock %}
 {% block page_actions %}
@@ -8,9 +10,15 @@
 {% endblock %}
 
 {% block content %}
-<section class="panel">
+<section class="panel panel-fill">
     <div class="panel-head">
-        <h2>{{ personnels|length }} / {{ total }} personnel{{ total > 1 ? 's' : '' }}</h2>
+        <h2>
+            {% if total == 0 %}
+                0 personnel
+            {% else %}
+                {{ pagination.from }}–{{ pagination.to }} / {{ total }} personnel{{ total > 1 ? 's' : '' }}
+            {% endif %}
+        </h2>
         <form method="get" class="search-form" action="{{ path('app_personnel_index') }}">
             <input type="search" name="q" value="{{ q }}" placeholder="Rechercher n° ou nom…">
             <button class="btn btn-ghost" type="submit">Filtrer</button>
@@ -23,34 +31,65 @@
     {% if personnels is empty %}
         <p class="empty">Aucun personnel trouvé. Importez la liste avec <code>php bin/console app:import-personnels</code>.</p>
     {% else %}
-        <table class="table">
-            <thead>
-            <tr>
-                <th>N° personnel</th>
-                <th>Nom</th>
-                <th>Statut</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for personnel in personnels %}
+        <div class="table-scroll">
+            <table class="table table-sticky">
+                <thead>
                 <tr>
-                    <td><a href="{{ path('app_personnel_show', {id: personnel.id}) }}"><strong>{{ personnel.numeroPersonnel }}</strong></a></td>
-                    <td>{{ personnel.nom }}</td>
-                    <td>
-                        {% if personnel.actif %}
-                            <span class="badge badge-delivered">Actif</span>
-                        {% else %}
-                            <span class="badge badge-cancelled">Inactif</span>
-                        {% endif %}
-                    </td>
-                    <td class="actions">
-                        <a href="{{ path('app_personnel_edit', {id: personnel.id}) }}">Modifier</a>
-                    </td>
+                    <th>N° personnel</th>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for personnel in personnels %}
+                    <tr>
+                        <td><a href="{{ path('app_personnel_show', {id: personnel.id}) }}"><strong>{{ personnel.numeroPersonnel }}</strong></a></td>
+                        <td>{{ personnel.nom }}</td>
+                        <td>
+                            {% if personnel.actif %}
+                                <span class="badge badge-delivered">Actif</span>
+                            {% else %}
+                                <span class="badge badge-cancelled">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{{ path('app_personnel_edit', {id: personnel.id}) }}">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.pages > 1 %}
+            <nav class="pagination" aria-label="Pagination personnels">
+                {% set queryParams = q ? {q: q} : {} %}
+                <a
+                    class="btn btn-ghost {{ pagination.page <= 1 ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page <= 1 ? '#' : path('app_personnel_index', queryParams|merge({page: pagination.page - 1})) }}"
+                    {% if pagination.page <= 1 %}aria-disabled="true"{% endif %}
+                >Précédent</a>
+
+                <div class="pagination-pages">
+                    {% for p in 1..pagination.pages %}
+                        {% if p == pagination.page %}
+                            <span class="page-chip is-current" aria-current="page">{{ p }}</span>
+                        {% elseif p == 1 or p == pagination.pages or (p >= pagination.page - 2 and p <= pagination.page + 2) %}
+                            <a class="page-chip" href="{{ path('app_personnel_index', queryParams|merge({page: p})) }}">{{ p }}</a>
+                        {% elseif p == pagination.page - 3 or p == pagination.page + 3 %}
+                            <span class="page-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <a
+                    class="btn btn-ghost {{ pagination.page >= pagination.pages ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page >= pagination.pages ? '#' : path('app_personnel_index', queryParams|merge({page: pagination.page + 1})) }}"
+                    {% if pagination.page >= pagination.pages %}aria-disabled="true"{% endif %}
+                >Suivant</a>
+            </nav>
+        {% endif %}
     {% endif %}
 </section>
 {% endblock %}

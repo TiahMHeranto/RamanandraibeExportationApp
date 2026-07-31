@@ -38,6 +38,112 @@ a:hover { text-decoration: underline; }
     min-height: 100vh;
 }
 
+body.page-viewport {
+    height: 100vh;
+    overflow: hidden;
+}
+
+body.page-viewport .app {
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body.page-viewport .sidebar {
+    height: 100vh;
+    overflow: auto;
+}
+
+body.page-viewport .main {
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1.25rem;
+}
+
+body.page-viewport .content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body.page-viewport .panel-fill {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.table-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+.table-sticky thead th {
+    position: sticky;
+    top: 0;
+    background: #f7fafb;
+    z-index: 1;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.pagination-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-chip {
+    min-width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0 0.55rem;
+    background: rgba(11, 28, 44, 0.06);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.page-chip:hover {
+    text-decoration: none;
+    background: rgba(15, 118, 110, 0.12);
+}
+
+.page-chip.is-current {
+    background: linear-gradient(135deg, #0f766e, #0b4f4a);
+    color: #fff;
+}
+
+.page-ellipsis {
+    color: var(--ink-soft);
+    padding: 0 0.2rem;
+}
+
+.btn.is-disabled,
+a.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -529,5 +635,17 @@ a:hover { text-decoration: underline; }
     .line-row > div,
     .line-row .form-widget {
         grid-template-columns: 1fr;
+    }
+
+    body.page-viewport,
+    body.page-viewport .app,
+    body.page-viewport .sidebar,
+    body.page-viewport .main {
+        height: auto;
+        overflow: visible;
+    }
+
+    body.page-viewport .table-scroll {
+        max-height: 55vh;
     }
 }
