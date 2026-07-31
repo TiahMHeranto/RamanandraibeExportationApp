@@ -1,0 +1,40 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Shipments — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Shipments{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{{ path('app_shipment_new') }}">New shipment</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    {% if shipments is empty %}
+        <p class="empty">No consignments recorded.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Client</th>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for shipment in shipments %}
+                <tr>
+                    <td><a href="{{ path('app_shipment_show', {id: shipment.id}) }}">{{ shipment.reference }}</a></td>
+                    <td>{{ shipment.client.companyName }}</td>
+                    <td>{{ shipment.originPort }} → {{ shipment.destinationPort }}</td>
+                    <td>{{ shipment.departureDate ? shipment.departureDate|date('Y-m-d') : '—' }}</td>
+                    <td><span class="badge badge-{{ shipment.status.value }}">{{ shipment.status.label }}</span></td>
+                    <td>${{ shipment.totalAmount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

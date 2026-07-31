@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sign in — Ramanandraibe Exportation{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block body %}
+<section class="auth-hero">
+    <div class="auth-visual" aria-hidden="true"></div>
+    <div class="auth-panel">
+        <p class="brand-lockup">Ramanandraibe</p>
+        <h1>Exportation</h1>
+        <p class="lede">Manage clients, cargo, and ocean freight from Toamasina to the world.</p>
+
+        {% if error %}
+            <div class="flash flash-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <label>
+                <span>Email</span>
+                <input type="email" name="_username" value="{{ last_username }}" required autofocus autocomplete="username">
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="_password" required autocomplete="current-password">
+            </label>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button class="btn btn-primary btn-block" type="submit">Enter workspace</button>
+        </form>
+
+        <p class="hint">Demo: <code>admin@ramanandraibe.mg</code> / <code>admin123</code></p>
+    </div>
+</section>
+{% endblock %}

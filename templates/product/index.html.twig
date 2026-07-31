@@ -1,0 +1,46 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Products — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Products{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{{ path('app_product_new') }}">Add product</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    {% if products is empty %}
+        <p class="empty">No catalog items yet.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Unit price</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>${{ product.unitPrice }} / {{ product.unit }}</td>
+                    <td>{{ product.active ? 'Active' : 'Inactive' }}</td>
+                    <td class="actions">
+                        <a href="{{ path('app_product_edit', {id: product.id}) }}">Edit</a>
+                        <form method="post" action="{{ path('app_product_delete', {id: product.id}) }}" onsubmit="return confirm('Delete this product?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                            <button type="submit" class="link-btn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

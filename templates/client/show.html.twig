@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ client.companyName }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ client.companyName }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_client_edit', {id: client.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+<section class="detail-grid">
+    <article class="panel">
+        <h2>Contact</h2>
+        <dl class="meta">
+            <div><dt>Person</dt><dd>{{ client.contactName }}</dd></div>
+            <div><dt>Email</dt><dd>{{ client.email }}</dd></div>
+            <div><dt>Phone</dt><dd>{{ client.phone ?: '—' }}</dd></div>
+            <div><dt>Location</dt><dd>{{ client.city ? client.city ~ ', ' : '' }}{{ client.country }}</dd></div>
+            <div class="span-2"><dt>Address</dt><dd>{{ client.address ?: '—' }}</dd></div>
+        </dl>
+        <form method="post" action="{{ path('app_client_delete', {id: client.id}) }}" onsubmit="return confirm('Delete this client?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
+            <button class="btn btn-danger" type="submit">Delete client</button>
+        </form>
+    </article>
+    <article class="panel">
+        <h2>Shipments</h2>
+        {% if client.shipments is empty %}
+            <p class="empty">No shipments for this client.</p>
+        {% else %}
+            <ul class="simple-list">
+                {% for shipment in client.shipments %}
+                    <li>
+                        <a href="{{ path('app_shipment_show', {id: shipment.id}) }}">{{ shipment.reference }}</a>
+                        <span class="badge badge-{{ shipment.status.value }}">{{ shipment.status.label }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

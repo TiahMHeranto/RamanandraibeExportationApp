@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ personnel.nom }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ personnel.numeroPersonnel }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_personnel_edit', {id: personnel.id}) }}">Modifier</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>{{ personnel.nom }}</h2>
+    <dl class="meta">
+        <div>
+            <dt>N° personnel</dt>
+            <dd>{{ personnel.numeroPersonnel }}</dd>
+        </div>
+        <div>
+            <dt>Statut</dt>
+            <dd>{{ personnel.actif ? 'Actif' : 'Inactif' }}</dd>
+        </div>
+        <div>
+            <dt>Créé le</dt>
+            <dd>{{ personnel.createdAt|date('d/m/Y H:i') }}</dd>
+        </div>
+        <div>
+            <dt>Mis à jour</dt>
+            <dd>{{ personnel.updatedAt|date('d/m/Y H:i') }}</dd>
+        </div>
+    </dl>
+    <form method="post" action="{{ path('app_personnel_delete', {id: personnel.id}) }}" onsubmit="return confirm('Supprimer ce personnel ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ personnel.id) }}">
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+</section>
+{% endblock %}

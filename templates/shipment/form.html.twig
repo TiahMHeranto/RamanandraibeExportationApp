@@ -1,0 +1,51 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ title }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="panel form-panel" {{ stimulus_controller('shipment-form') }}>
+    {{ form_start(form) }}
+        <div class="form-grid">
+            {{ form_row(form.reference) }}
+            {{ form_row(form.client) }}
+            {{ form_row(form.status) }}
+            {{ form_row(form.originPort) }}
+            {{ form_row(form.destinationPort) }}
+            {{ form_row(form.departureDate) }}
+            {{ form_row(form.arrivalDate) }}
+            <div class="span-2">{{ form_row(form.notes) }}</div>
+        </div>
+
+        <div class="lines-block">
+            <div class="panel-head">
+                <h2>Cargo lines</h2>
+                <button type="button" class="btn btn-ghost" data-action="shipment-form#addLine">Add line</button>
+            </div>
+            <div
+                class="lines-list"
+                data-shipment-form-target="list"
+                data-prototype="{{ form_widget(form.lines.vars.prototype)|e('html_attr') }}"
+                data-index="{{ form.lines|length }}"
+            >
+                {% for line in form.lines %}
+                    <div class="line-row" data-shipment-form-target="row">
+                        <div>
+                            {{ form_row(line.product) }}
+                            {{ form_row(line.quantity) }}
+                            {{ form_row(line.unitPrice) }}
+                        </div>
+                        <button type="button" class="btn btn-ghost" data-action="shipment-form#removeLine">Remove</button>
+                    </div>
+                {% endfor %}
+            </div>
+            {% do form.lines.setRendered() %}
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-ghost" href="{{ path('app_shipment_index') }}">Cancel</a>
+            <button class="btn btn-primary" type="submit">Save shipment</button>
+        </div>
+    {{ form_end(form) }}
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Overview — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Overview{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{{ path('app_shipment_new') }}">New shipment</a>
+{% endblock %}
+
+{% block content %}
+<section class="stat-row stats-5">
+    <article class="stat">
+        <span>Personnels</span>
+        <strong>{{ personnelCount }}</strong>
+    </article>
+    <article class="stat">
+        <span>Clients</span>
+        <strong>{{ clientCount }}</strong>
+    </article>
+    <article class="stat">
+        <span>Active products</span>
+        <strong>{{ productCount }}</strong>
+    </article>
+    <article class="stat">
+        <span>Shipments</span>
+        <strong>{{ shipmentCount }}</strong>
+    </article>
+    <article class="stat accent">
+        <span>In transit</span>
+        <strong>{{ inTransitCount }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Latest shipments</h2>
+        <a href="{{ path('app_shipment_index') }}">View all</a>
+    </div>
+    {% if latestShipments is empty %}
+        <p class="empty">No shipments yet. Create your first export consignment.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Client</th>
+                <th>Route</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for shipment in latestShipments %}
+                <tr>
+                    <td><a href="{{ path('app_shipment_show', {id: shipment.id}) }}">{{ shipment.reference }}</a></td>
+                    <td>{{ shipment.client.companyName }}</td>
+                    <td>{{ shipment.originPort }} → {{ shipment.destinationPort }}</td>
+                    <td><span class="badge badge-{{ shipment.status.value }}">{{ shipment.status.label }}</span></td>
+                    <td>${{ shipment.totalAmount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

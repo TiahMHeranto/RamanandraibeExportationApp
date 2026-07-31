@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Personnels — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Personnels{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{{ path('app_personnel_new') }}">Ajouter</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-head">
+        <h2>{{ personnels|length }} / {{ total }} personnel{{ total > 1 ? 's' : '' }}</h2>
+        <form method="get" class="search-form" action="{{ path('app_personnel_index') }}">
+            <input type="search" name="q" value="{{ q }}" placeholder="Rechercher n° ou nom…">
+            <button class="btn btn-ghost" type="submit">Filtrer</button>
+            {% if q %}
+                <a class="btn btn-ghost" href="{{ path('app_personnel_index') }}">Réinitialiser</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if personnels is empty %}
+        <p class="empty">Aucun personnel trouvé. Importez la liste avec <code>php bin/console app:import-personnels</code>.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>N° personnel</th>
+                <th>Nom</th>
+                <th>Statut</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for personnel in personnels %}
+                <tr>
+                    <td><a href="{{ path('app_personnel_show', {id: personnel.id}) }}"><strong>{{ personnel.numeroPersonnel }}</strong></a></td>
+                    <td>{{ personnel.nom }}</td>
+                    <td>
+                        {% if personnel.actif %}
+                            <span class="badge badge-delivered">Actif</span>
+                        {% else %}
+                            <span class="badge badge-cancelled">Inactif</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions">
+                        <a href="{{ path('app_personnel_edit', {id: personnel.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+{% endblock %}

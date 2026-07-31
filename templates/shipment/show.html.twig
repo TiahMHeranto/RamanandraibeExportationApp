@@ -1,0 +1,58 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ shipment.reference }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ shipment.reference }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_shipment_edit', {id: shipment.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+<section class="detail-grid">
+    <article class="panel">
+        <div class="panel-head">
+            <h2>Consignment</h2>
+            <span class="badge badge-{{ shipment.status.value }}">{{ shipment.status.label }}</span>
+        </div>
+        <dl class="meta">
+            <div><dt>Client</dt><dd><a href="{{ path('app_client_show', {id: shipment.client.id}) }}">{{ shipment.client.companyName }}</a></dd></div>
+            <div><dt>Route</dt><dd>{{ shipment.originPort }} → {{ shipment.destinationPort }}</dd></div>
+            <div><dt>Departure</dt><dd>{{ shipment.departureDate ? shipment.departureDate|date('Y-m-d') : '—' }}</dd></div>
+            <div><dt>Arrival</dt><dd>{{ shipment.arrivalDate ? shipment.arrivalDate|date('Y-m-d') : '—' }}</dd></div>
+            <div class="span-2"><dt>Notes</dt><dd>{{ shipment.notes ?: '—' }}</dd></div>
+        </dl>
+        <form method="post" action="{{ path('app_shipment_delete', {id: shipment.id}) }}" onsubmit="return confirm('Delete this shipment?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ shipment.id) }}">
+            <button class="btn btn-danger" type="submit">Delete shipment</button>
+        </form>
+    </article>
+
+    <article class="panel">
+        <div class="panel-head">
+            <h2>Cargo</h2>
+            <strong>${{ shipment.totalAmount }}</strong>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Unit price</th>
+                <th>Line total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for line in shipment.lines %}
+                <tr>
+                    <td>{{ line.product.name }}</td>
+                    <td>{{ line.quantity }} {{ line.product.unit }}</td>
+                    <td>${{ line.unitPrice }}</td>
+                    <td>${{ line.lineTotal }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" class="empty">No cargo lines.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</section>
+{% endblock %}
