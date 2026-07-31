@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ fournisseur.nom }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ fournisseur.code }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_fournisseur_edit', {id: fournisseur.id}) }}">Modifier</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>{{ fournisseur.nom }}</h2>
+    <dl class="meta">
+        <div>
+            <dt>Code fournisseur</dt>
+            <dd>{{ fournisseur.code }}</dd>
+        </div>
+        <div>
+            <dt>Zone</dt>
+            <dd>{{ fournisseur.zone }}</dd>
+        </div>
+        <div>
+            <dt>Statut</dt>
+            <dd>{{ fournisseur.actif ? 'Actif' : 'Inactif' }}</dd>
+        </div>
+        <div>
+            <dt>Mis à jour</dt>
+            <dd>{{ fournisseur.updatedAt|date('d/m/Y H:i') }}</dd>
+        </div>
+    </dl>
+    <form method="post" action="{{ path('app_fournisseur_delete', {id: fournisseur.id}) }}" onsubmit="return confirm('Supprimer ce fournisseur ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ fournisseur.id) }}">
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+</section>
+{% endblock %}

@@ -15,6 +15,7 @@
         <nav class="nav">
             <a href="{{ path('app_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'app_dashboard' ? 'is-active' : '' }}">Overview</a>
             <a href="{{ path('app_personnel_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_personnel' ? 'is-active' : '' }}">Personnels</a>
+            <a href="{{ path('app_fournisseur_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_fournisseur' ? 'is-active' : '' }}">Fournisseurs</a>
             <a href="{{ path('app_shipment_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_shipment' ? 'is-active' : '' }}">Shipments</a>
             <a href="{{ path('app_client_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_client' ? 'is-active' : '' }}">Clients</a>
             <a href="{{ path('app_product_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_product' ? 'is-active' : '' }}">Products</a>

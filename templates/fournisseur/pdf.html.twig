@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des fournisseurs</title>
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #0b1c2c; margin: 24px; }
+        h1 { font-size: 18px; margin: 0 0 4px; }
+        .meta { color: #31485d; margin-bottom: 18px; font-size: 10px; }
+        .brand { color: #0f766e; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #d5e1e8; padding: 6px 8px; text-align: left; vertical-align: top; }
+        th { background: #e8f4f2; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+        tr:nth-child(even) td { background: #f7fafb; }
+        .code { width: 28%; white-space: nowrap; font-weight: bold; }
+        .zone { width: 24%; }
+        .status { width: 12%; }
+        .footer { margin-top: 16px; font-size: 9px; color: #31485d; }
+    </style>
+</head>
+<body>
+    <div class="brand">Ramanandraibe Exportation — Raphia</div>
+    <h1>Liste des fournisseurs</h1>
+    <p class="meta">
+        Généré le {{ generatedAt|date('d/m/Y à H:i') }}
+        — {{ total }} enregistrement{{ total > 1 ? 's' : '' }}
+        {% if q %} — Filtre : « {{ q }} »{% endif %}
+        {% if zone %} — Zone : {{ zone }}{% endif %}
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="code">Code fournisseur</th>
+            <th>Nom fournisseur</th>
+            <th class="zone">Zone</th>
+            <th class="status">Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fournisseur in fournisseurs %}
+            <tr>
+                <td class="code">{{ fournisseur.code }}</td>
+                <td>{{ fournisseur.nom }}</td>
+                <td class="zone">{{ fournisseur.zone }}</td>
+                <td class="status">{{ fournisseur.actif ? 'Actif' : 'Inactif' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Aucun fournisseur à exporter.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="footer">Document généré depuis l’application Ramanandraibe Exportation.</p>
+</body>
+</html>

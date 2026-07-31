@@ -270,6 +270,19 @@ a.is-disabled {
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.stat-row.stats-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.search-form select {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.6rem 0.9rem;
+    font: inherit;
+    background: #fff;
+    max-width: 220px;
+}
+
 .search-form {
     display: flex;
     flex-wrap: wrap;
@@ -609,7 +622,8 @@ a.is-disabled {
 }
 
 @media (max-width: 1100px) {
-    .stat-row.stats-5 {
+    .stat-row.stats-5,
+    .stat-row.stats-6 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

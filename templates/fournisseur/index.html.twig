@@ -1,0 +1,106 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_class %}{{ parent() }} page-viewport page-fournisseurs{% endblock %}
+
+{% block title %}Fournisseurs — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}Fournisseurs{% endblock %}
+{% block page_actions %}
+    {% set exportParams = {} %}
+    {% if q %}{% set exportParams = exportParams|merge({q: q}) %}{% endif %}
+    {% if zone %}{% set exportParams = exportParams|merge({zone: zone}) %}{% endif %}
+    <a class="btn btn-ghost" href="{{ path('app_fournisseur_export_pdf', exportParams) }}">Exporter PDF</a>
+    <a class="btn btn-primary" href="{{ path('app_fournisseur_new') }}">Ajouter</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel panel-fill">
+    <div class="panel-head">
+        <h2>
+            {% if total == 0 %}
+                0 fournisseur
+            {% else %}
+                {{ pagination.from }}–{{ pagination.to }} / {{ total }} fournisseur{{ total > 1 ? 's' : '' }}
+            {% endif %}
+        </h2>
+        <form method="get" class="search-form" action="{{ path('app_fournisseur_index') }}">
+            <input type="search" name="q" value="{{ q }}" placeholder="Rechercher code, nom ou zone…">
+            <select name="zone">
+                <option value="">Toutes les zones</option>
+                {% for z in zones %}
+                    <option value="{{ z }}" {{ zone == z ? 'selected' : '' }}>{{ z }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-ghost" type="submit">Filtrer</button>
+            {% if q or zone %}
+                <a class="btn btn-ghost" href="{{ path('app_fournisseur_index') }}">Réinitialiser</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if fournisseurs is empty %}
+        <p class="empty">Aucun fournisseur trouvé. Importez avec <code>php bin/console app:import-fournisseurs</code>.</p>
+    {% else %}
+        <div class="table-scroll">
+            <table class="table table-sticky">
+                <thead>
+                <tr>
+                    <th>Code fournisseur</th>
+                    <th>Nom fournisseur</th>
+                    <th>Zone</th>
+                    <th>Statut</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for fournisseur in fournisseurs %}
+                    <tr>
+                        <td><a href="{{ path('app_fournisseur_show', {id: fournisseur.id}) }}"><strong>{{ fournisseur.code }}</strong></a></td>
+                        <td>{{ fournisseur.nom }}</td>
+                        <td>{{ fournisseur.zone }}</td>
+                        <td>
+                            {% if fournisseur.actif %}
+                                <span class="badge badge-delivered">Actif</span>
+                            {% else %}
+                                <span class="badge badge-cancelled">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="{{ path('app_fournisseur_edit', {id: fournisseur.id}) }}">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.pages > 1 %}
+            <nav class="pagination" aria-label="Pagination fournisseurs">
+                {% set queryParams = {} %}
+                {% if q %}{% set queryParams = queryParams|merge({q: q}) %}{% endif %}
+                {% if zone %}{% set queryParams = queryParams|merge({zone: zone}) %}{% endif %}
+                <a
+                    class="btn btn-ghost {{ pagination.page <= 1 ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page <= 1 ? '#' : path('app_fournisseur_index', queryParams|merge({page: pagination.page - 1})) }}"
+                >Précédent</a>
+
+                <div class="pagination-pages">
+                    {% for p in 1..pagination.pages %}
+                        {% if p == pagination.page %}
+                            <span class="page-chip is-current" aria-current="page">{{ p }}</span>
+                        {% elseif p == 1 or p == pagination.pages or (p >= pagination.page - 2 and p <= pagination.page + 2) %}
+                            <a class="page-chip" href="{{ path('app_fournisseur_index', queryParams|merge({page: p})) }}">{{ p }}</a>
+                        {% elseif p == pagination.page - 3 or p == pagination.page + 3 %}
+                            <span class="page-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <a
+                    class="btn btn-ghost {{ pagination.page >= pagination.pages ? 'is-disabled' : '' }}"
+                    href="{{ pagination.page >= pagination.pages ? '#' : path('app_fournisseur_index', queryParams|merge({page: pagination.page + 1})) }}"
+                >Suivant</a>
+            </nav>
+        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

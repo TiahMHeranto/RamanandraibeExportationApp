@@ -1,0 +1,21 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ title }} — Ramanandraibe Exportation{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="panel form-panel">
+    {{ form_start(form) }}
+        <div class="form-grid">
+            {{ form_row(form.code) }}
+            {{ form_row(form.nom) }}
+            {{ form_row(form.zone) }}
+            {{ form_row(form.actif) }}
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-ghost" href="{{ path('app_fournisseur_index') }}">Annuler</a>
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+        </div>
+    {{ form_end(form) }}
+</section>
+{% endblock %}

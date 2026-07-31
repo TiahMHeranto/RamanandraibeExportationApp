@@ -11,6 +11,7 @@ Built with **Symfony 7.1**, Doctrine, Twig, and Hotwire (Stimulus + Turbo).
 - Secure login (form authentication)
 - Dashboard with live counts
 - **Personnels** CRUD (imported from `ListeDesPersonnels.xlsx` — N° + nom)
+- **Fournisseurs** CRUD (imported from `LISTE FRNS RAPHIA.xlsx` — code, nom, zone)
 - **Clients** CRUD (international buyers)
 - **Products** catalog (vanilla, spices, cocoa, oils, …)
 - **Shipments** with cargo lines, ports, status workflow
@@ -25,6 +26,15 @@ php bin/console app:import-personnels --purge
 ```
 
 Source CSV: `data/personnels.csv` (275 unique numbers from the Excel list).
+
+### Import fournisseurs
+
+```bash
+php bin/console app:import-fournisseurs
+php bin/console app:import-fournisseurs --purge
+```
+
+Source CSV: `data/fournisseurs.csv` (39 fournisseurs raphia from `LISTE FRNS RAPHIA.xlsx`).
 
 ---
 
