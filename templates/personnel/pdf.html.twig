@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des personnels</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 11px;
+            color: #0b1c2c;
+            margin: 24px;
+        }
+        h1 {
+            font-size: 18px;
+            margin: 0 0 4px;
+        }
+        .meta {
+            color: #31485d;
+            margin-bottom: 18px;
+            font-size: 10px;
+        }
+        .brand {
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #d5e1e8;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #e8f4f2;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        tr:nth-child(even) td {
+            background: #f7fafb;
+        }
+        .num {
+            width: 18%;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+        .status {
+            width: 14%;
+        }
+        .footer {
+            margin-top: 16px;
+            font-size: 9px;
+            color: #31485d;
+        }
+    </style>
+</head>
+<body>
+    <div class="brand">Ramanandraibe Exportation</div>
+    <h1>Liste des personnels</h1>
+    <p class="meta">
+        Généré le {{ generatedAt|date('d/m/Y à H:i') }}
+        — {{ total }} enregistrement{{ total > 1 ? 's' : '' }}
+        {% if q %} — Filtre : « {{ q }} »{% endif %}
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="num">N° personnel</th>
+            <th>Nom</th>
+            <th class="status">Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for personnel in personnels %}
+            <tr>
+                <td class="num">{{ personnel.numeroPersonnel }}</td>
+                <td>{{ personnel.nom }}</td>
+                <td class="status">{{ personnel.actif ? 'Actif' : 'Inactif' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun personnel à exporter.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="footer">Document généré depuis l’application Ramanandraibe Exportation.</p>
+</body>
+</html>

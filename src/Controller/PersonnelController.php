@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Personnel;
 use App\Form\PersonnelType;
 use App\Repository\PersonnelRepository;
+use App\Service\PersonnelPdfExporter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,28 @@ class PersonnelController extends AbstractController
             'personnels' => $personnelRepository->search($q !== '' ? $q : null),
             'q' => $q,
             'total' => $personnelRepository->count([]),
+        ]);
+    }
+
+    #[Route('/export/pdf', name: 'app_personnel_export_pdf', methods: ['GET'])]
+    public function exportPdf(
+        Request $request,
+        PersonnelRepository $personnelRepository,
+        PersonnelPdfExporter $pdfExporter,
+    ): Response {
+        $q = trim((string) $request->query->get('q', ''));
+        $personnels = $personnelRepository->search($q !== '' ? $q : null);
+        $pdf = $pdfExporter->export($personnels, $q !== '' ? $q : null);
+
+        $filename = sprintf(
+            'personnels_%s%s.pdf',
+            (new \DateTimeImmutable())->format('Y-m-d'),
+            $q !== '' ? '_filtre' : ''
+        );
+
+        return new Response($pdf, Response::HTTP_OK, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 

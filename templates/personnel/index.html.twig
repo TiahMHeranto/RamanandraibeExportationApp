@@ -3,6 +3,7 @@
 {% block title %}Personnels — Ramanandraibe Exportation{% endblock %}
 {% block page_title %}Personnels{% endblock %}
 {% block page_actions %}
+    <a class="btn btn-ghost" href="{{ path('app_personnel_export_pdf', q ? {q: q} : {}) }}">Exporter PDF</a>
     <a class="btn btn-primary" href="{{ path('app_personnel_new') }}">Ajouter</a>
 {% endblock %}
 
