@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Arrivage;
 use App\Form\ArrivageType;
+use App\Repository\ArticleRepository;
 use App\Repository\ArrivageRepository;
+use App\Repository\CouleurRepository;
+use App\Repository\MagasinRepository;
 use App\Service\ArrivagePdfExporter;
+use App\Service\StockService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,11 +24,7 @@ class ArrivageController extends AbstractController
     {
         $q = trim((string) $request->query->get('q', ''));
         $page = max(1, $request->query->getInt('page', 1));
-        $pagination = $arrivageRepository->searchPaginated(
-            $q !== '' ? $q : null,
-            $page,
-            15,
-        );
+        $pagination = $arrivageRepository->searchPaginated($q !== '' ? $q : null, $page, 15);
 
         return $this->render('arrivage/index.html.twig', [
             'arrivages' => $pagination['items'],
@@ -35,28 +35,31 @@ class ArrivageController extends AbstractController
     }
 
     #[Route('/export/pdf', name: 'app_arrivage_export_pdf', methods: ['GET'])]
-    public function exportPdf(
-        Request $request,
-        ArrivageRepository $arrivageRepository,
-        ArrivagePdfExporter $pdfExporter,
-    ): Response {
+    public function exportPdf(Request $request, ArrivageRepository $arrivageRepository, ArrivagePdfExporter $pdfExporter): Response
+    {
         $q = trim((string) $request->query->get('q', ''));
-        $arrivages = $arrivageRepository->search($q !== '' ? $q : null);
-        $pdf = $pdfExporter->export($arrivages, $q !== '' ? $q : null);
-
-        $filename = sprintf('arrivages_%s.pdf', (new \DateTimeImmutable())->format('Y-m-d'));
-
-        return new Response($pdf, Response::HTTP_OK, [
+        $pdf = $pdfExporter->export($arrivageRepository->search($q !== '' ? $q : null), $q !== '' ? $q : null);
+        return new Response($pdf, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            'Content-Disposition' => 'attachment; filename="arrivages_'.date('Y-m-d').'.pdf"',
         ]);
     }
 
     #[Route('/new', name: 'app_arrivage_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, ArrivageRepository $arrivageRepository): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $em,
+        ArrivageRepository $arrivageRepository,
+        ArticleRepository $articleRepository,
+        CouleurRepository $couleurRepository,
+        MagasinRepository $magasinRepository,
+        StockService $stockService,
+    ): Response {
         $arrivage = new Arrivage();
         $arrivage->setNumero($arrivageRepository->nextNumero(new \DateTimeImmutable('today')));
+        $arrivage->setArticle($articleRepository->findOneByCode('TV-MAJ'));
+        $arrivage->setCouleur($couleurRepository->findOneByCode('NAT'));
+        $arrivage->setMagasin($magasinRepository->findDefault());
 
         $form = $this->createForm(ArrivageType::class, $arrivage);
         $form->handleRequest($request);
@@ -64,23 +67,18 @@ class ArrivageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($arrivage);
             $em->flush();
-            $this->addFlash('success', 'Arrivage enregistré.');
-
+            $stockService->registerArrivage($arrivage);
+            $this->addFlash('success', 'Arrivage enregistré et entrée stock créée.');
             return $this->redirectToRoute('app_arrivage_show', ['id' => $arrivage->getId()]);
         }
 
-        return $this->render('arrivage/form.html.twig', [
-            'form' => $form,
-            'title' => 'Nouvel arrivage',
-        ]);
+        return $this->render('arrivage/form.html.twig', ['form' => $form, 'title' => 'Nouvel arrivage']);
     }
 
     #[Route('/{id}', name: 'app_arrivage_show', methods: ['GET'])]
     public function show(Arrivage $arrivage): Response
     {
-        return $this->render('arrivage/show.html.twig', [
-            'arrivage' => $arrivage,
-        ]);
+        return $this->render('arrivage/show.html.twig', ['arrivage' => $arrivage]);
     }
 
     #[Route('/{id}/edit', name: 'app_arrivage_edit', methods: ['GET', 'POST'])]
@@ -88,19 +86,13 @@ class ArrivageController extends AbstractController
     {
         $form = $this->createForm(ArrivageType::class, $arrivage);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $arrivage->touch();
             $em->flush();
             $this->addFlash('success', 'Arrivage mis à jour.');
-
             return $this->redirectToRoute('app_arrivage_show', ['id' => $arrivage->getId()]);
         }
-
-        return $this->render('arrivage/form.html.twig', [
-            'form' => $form,
-            'title' => 'Modifier l\'arrivage',
-        ]);
+        return $this->render('arrivage/form.html.twig', ['form' => $form, 'title' => 'Modifier l\'arrivage']);
     }
 
     #[Route('/{id}', name: 'app_arrivage_delete', methods: ['POST'])]
@@ -111,7 +103,6 @@ class ArrivageController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Arrivage supprimé.');
         }
-
         return $this->redirectToRoute('app_arrivage_index');
     }
 }

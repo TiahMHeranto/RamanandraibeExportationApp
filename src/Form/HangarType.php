@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Hangar;
+use App\Entity\Magasin;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,18 +16,15 @@ class HangarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('numero', TextType::class, [
-                'label' => 'Hangar numéro',
-                'attr' => ['placeholder' => 'ex: H01'],
-            ])
-            ->add('code', TextType::class, [
-                'label' => 'Code',
-                'attr' => ['placeholder' => 'ex: HT-RAPHIA-01'],
-            ])
-            ->add('actif', CheckboxType::class, [
-                'label' => 'Actif',
+            ->add('numero', TextType::class, ['label' => 'Hangar numéro'])
+            ->add('code', TextType::class, ['label' => 'Code'])
+            ->add('magasin', EntityType::class, [
+                'class' => Magasin::class,
+                'choice_label' => 'nom',
                 'required' => false,
-            ]);
+                'placeholder' => '—',
+            ])
+            ->add('actif', CheckboxType::class, ['label' => 'Actif', 'required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

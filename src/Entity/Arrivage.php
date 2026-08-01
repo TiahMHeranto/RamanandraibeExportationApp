@@ -42,6 +42,18 @@ class Arrivage
     #[Assert\NotNull]
     private ?\DateTimeImmutable $dateArrivage = null;
 
+    #[ORM\ManyToOne]
+    private ?Article $article = null;
+
+    #[ORM\ManyToOne]
+    private ?Couleur $couleur = null;
+
+    #[ORM\ManyToOne]
+    private ?Magasin $magasin = null;
+
+    #[ORM\ManyToOne]
+    private ?Contrat $contrat = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -55,88 +67,27 @@ class Arrivage
         $this->dateArrivage = new \DateTimeImmutable('today');
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getNumero(): ?string
-    {
-        return $this->numero;
-    }
-
-    public function setNumero(string $numero): static
-    {
-        $this->numero = strtoupper(trim($numero));
-
-        return $this;
-    }
-
-    public function getFournisseur(): ?Fournisseur
-    {
-        return $this->fournisseur;
-    }
-
-    public function setFournisseur(?Fournisseur $fournisseur): static
-    {
-        $this->fournisseur = $fournisseur;
-
-        return $this;
-    }
-
-    public function getOrigine(): ?string
-    {
-        return $this->origine;
-    }
-
-    public function setOrigine(string $origine): static
-    {
-        $this->origine = trim($origine);
-
-        return $this;
-    }
-
-    public function getPoids(): ?string
-    {
-        return $this->poids;
-    }
-
-    public function setPoids(string $poids): static
-    {
-        $this->poids = $poids;
-
-        return $this;
-    }
-
-    public function getDateArrivage(): ?\DateTimeImmutable
-    {
-        return $this->dateArrivage;
-    }
-
-    public function setDateArrivage(\DateTimeImmutable $dateArrivage): static
-    {
-        $this->dateArrivage = $dateArrivage;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->numero;
-    }
+    public function getId(): ?int { return $this->id; }
+    public function getNumero(): ?string { return $this->numero; }
+    public function setNumero(string $numero): static { $this->numero = strtoupper(trim($numero)); return $this; }
+    public function getFournisseur(): ?Fournisseur { return $this->fournisseur; }
+    public function setFournisseur(?Fournisseur $fournisseur): static { $this->fournisseur = $fournisseur; return $this; }
+    public function getOrigine(): ?string { return $this->origine; }
+    public function setOrigine(string $origine): static { $this->origine = trim($origine); return $this; }
+    public function getPoids(): ?string { return $this->poids; }
+    public function setPoids(string $poids): static { $this->poids = $poids; return $this; }
+    public function getDateArrivage(): ?\DateTimeImmutable { return $this->dateArrivage; }
+    public function setDateArrivage(\DateTimeImmutable $dateArrivage): static { $this->dateArrivage = $dateArrivage; return $this; }
+    public function getArticle(): ?Article { return $this->article; }
+    public function setArticle(?Article $article): static { $this->article = $article; return $this; }
+    public function getCouleur(): ?Couleur { return $this->couleur; }
+    public function setCouleur(?Couleur $couleur): static { $this->couleur = $couleur; return $this; }
+    public function getMagasin(): ?Magasin { return $this->magasin; }
+    public function setMagasin(?Magasin $magasin): static { $this->magasin = $magasin; return $this; }
+    public function getContrat(): ?Contrat { return $this->contrat; }
+    public function setContrat(?Contrat $contrat): static { $this->contrat = $contrat; return $this; }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+    public function touch(): void { $this->updatedAt = new \DateTimeImmutable(); }
+    public function __toString(): string { return (string) $this->numero; }
 }

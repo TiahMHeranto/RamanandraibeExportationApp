@@ -29,6 +29,9 @@ class Hangar
     #[Assert\Length(max: 80)]
     private ?string $code = null;
 
+    #[ORM\ManyToOne]
+    private ?Magasin $magasin = null;
+
     #[ORM\Column]
     private bool $actif = true;
 
@@ -44,64 +47,17 @@ class Hangar
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getNumero(): ?string
-    {
-        return $this->numero;
-    }
-
-    public function setNumero(string $numero): static
-    {
-        $this->numero = strtoupper(trim($numero));
-
-        return $this;
-    }
-
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): static
-    {
-        $this->code = strtoupper(trim($code));
-
-        return $this;
-    }
-
-    public function isActif(): bool
-    {
-        return $this->actif;
-    }
-
-    public function setActif(bool $actif): static
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    public function __toString(): string
-    {
-        return sprintf('%s — %s', $this->numero, $this->code);
-    }
+    public function getId(): ?int { return $this->id; }
+    public function getNumero(): ?string { return $this->numero; }
+    public function setNumero(string $numero): static { $this->numero = strtoupper(trim($numero)); return $this; }
+    public function getCode(): ?string { return $this->code; }
+    public function setCode(string $code): static { $this->code = strtoupper(trim($code)); return $this; }
+    public function getMagasin(): ?Magasin { return $this->magasin; }
+    public function setMagasin(?Magasin $magasin): static { $this->magasin = $magasin; return $this; }
+    public function isActif(): bool { return $this->actif; }
+    public function setActif(bool $actif): static { $this->actif = $actif; return $this; }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+    public function touch(): void { $this->updatedAt = new \DateTimeImmutable(); }
+    public function __toString(): string { return sprintf('%s — %s', $this->numero, $this->code); }
 }

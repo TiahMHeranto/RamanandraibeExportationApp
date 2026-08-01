@@ -1,0 +1,43 @@
+{% extends 'layout.html.twig' %}
+{% block body_class %}{{ parent() }} page-viewport{% endblock %}
+{% block title %}Kardex{% endblock %}
+{% block page_title %}Mouvements de stock{% endblock %}
+{% block page_actions %}
+<a class="btn btn-ghost" href="{{ path('app_stock_index') }}">Soldes</a>
+<a class="btn btn-primary" href="{{ path('app_stock_mouvement_new') }}">Nouveau</a>
+{% endblock %}
+{% block content %}
+<section class="panel panel-fill">
+<div class="panel-head">
+<h2>{{ mouvements|length }} mouvements</h2>
+<form method="get" class="search-form">
+<select name="article"><option value="">Tous articles</option>
+{% for a in articles %}<option value="{{ a.id }}" {{ articleId == a.id ? 'selected' : '' }}>{{ a.libelle }}</option>{% endfor %}
+</select>
+<select name="magasin"><option value="">Tous magasins</option>
+{% for m in magasins %}<option value="{{ m.id }}" {{ magasinId == m.id ? 'selected' : '' }}>{{ m.nom }}</option>{% endfor %}
+</select>
+<button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+</div>
+<div class="table-scroll">
+<table class="table table-sticky">
+<thead><tr><th>Date</th><th>Sens</th><th>Type</th><th>Article</th><th>Couleur</th><th>Poids</th><th>Réf</th><th>Magasin</th></tr></thead>
+<tbody>
+{% for m in mouvements %}
+<tr>
+<td>{{ m.dateMouvement|date('d/m/Y') }}</td>
+<td>{{ m.sens.label }}</td>
+<td>{{ m.typeOperation.label }}</td>
+<td>{{ m.article.libelle }}</td>
+<td>{{ m.couleur.libelle }}</td>
+<td>{{ m.poids }} kg</td>
+<td>{{ m.reference ?: '—' }}</td>
+<td>{{ m.magasin.nom }}</td>
+</tr>
+{% else %}<tr><td colspan="8" class="empty">Aucun mouvement.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+{% endblock %}

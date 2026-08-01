@@ -1,0 +1,27 @@
+{% extends 'layout.html.twig' %}
+{% block body_class %}{{ parent() }} page-viewport{% endblock %}
+{% block title %}Stock{% endblock %}
+{% block page_title %}Soldes stock{% endblock %}
+{% block page_actions %}
+<a class="btn btn-ghost" href="{{ path('app_stock_mouvements') }}">Kardex</a>
+<a class="btn btn-primary" href="{{ path('app_stock_mouvement_new') }}">Mouvement</a>
+{% endblock %}
+{% block content %}
+<section class="panel panel-fill">
+<div class="table-scroll">
+<table class="table table-sticky">
+<thead><tr><th>Article</th><th>Couleur</th><th>Magasin</th><th>Famille</th><th>Solde (kg)</th></tr></thead>
+<tbody>
+{% for s in soldes %}
+<tr>
+<td>{{ s.article }}</td><td>{{ s.couleur }}</td><td>{{ s.magasin }}</td><td>{{ s.famille }}</td>
+<td><strong>{{ s.solde }}</strong></td>
+</tr>
+{% else %}
+<tr><td colspan="5" class="empty">Aucun mouvement de stock pour le moment.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+{% endblock %}

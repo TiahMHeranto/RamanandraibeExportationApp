@@ -1,0 +1,40 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Rendement{% endblock %}
+{% block page_title %}Rendement personnel{% endblock %}
+{% block page_actions %}
+<a class="btn btn-ghost" href="{{ path('app_pointage_index') }}">Pointage</a>
+{% endblock %}
+{% block content %}
+<section class="panel">
+<div class="panel-head">
+<h2>Agrégats triage</h2>
+<form method="get" class="search-form">
+<input type="date" name="from" value="{{ from }}">
+<input type="date" name="to" value="{{ to }}">
+<button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+</div>
+<table class="table">
+<thead>
+<tr>
+<th>N°</th><th>Nom</th><th>Sessions</th>
+<th>Poids sorti</th><th>Σ entrées</th><th>Pièces</th>
+</tr>
+</thead>
+<tbody>
+{% for r in rows %}
+<tr>
+<td>{{ r.numero }}</td>
+<td>{{ r.nom }}</td>
+<td>{{ r.sessions }}</td>
+<td>{{ r.poids_sortie|number_format(3, '.', ' ') }} kg</td>
+<td>{{ r.poids_entree|number_format(3, '.', ' ') }} kg</td>
+<td>{{ r.nb_pieces }}</td>
+</tr>
+{% else %}
+<tr><td colspan="6" class="empty">Aucun traitement sur la période.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</section>
+{% endblock %}

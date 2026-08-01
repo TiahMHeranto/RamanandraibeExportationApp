@@ -23,6 +23,22 @@
             <dd>{{ arrivage.origine }}</dd>
         </div>
         <div>
+            <dt>Article</dt>
+            <dd>{{ arrivage.article ? arrivage.article.libelle : '—' }}</dd>
+        </div>
+        <div>
+            <dt>Couleur</dt>
+            <dd>{{ arrivage.couleur ? arrivage.couleur.libelle : '—' }}</dd>
+        </div>
+        <div>
+            <dt>Magasin</dt>
+            <dd>{{ arrivage.magasin ? arrivage.magasin.nom : '—' }}</dd>
+        </div>
+        <div>
+            <dt>Contrat</dt>
+            <dd>{{ arrivage.contrat ? arrivage.contrat.reference : '—' }}</dd>
+        </div>
+        <div>
             <dt>Poids</dt>
             <dd>{{ arrivage.poids }} kg</dd>
         </div>

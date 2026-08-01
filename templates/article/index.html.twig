@@ -1,0 +1,20 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Articles — Stock{% endblock %}
+{% block page_title %}Articles raphia{% endblock %}
+{% block page_actions %}<a class="btn btn-primary" href="{{ path('app_article_new') }}">Ajouter</a>{% endblock %}
+{% block content %}
+<section class="panel">
+<table class="table">
+<thead><tr><th>Code</th><th>Libellé</th><th>Famille</th><th>Statut</th><th></th></tr></thead>
+<tbody>
+{% for a in articles %}
+<tr>
+<td>{{ a.code }}</td><td>{{ a.libelle }}</td><td>{{ a.famille.label }}</td>
+<td>{{ a.actif ? 'Actif' : 'Inactif' }}</td>
+<td class="actions"><a href="{{ path('app_article_edit', {id: a.id}) }}">Modifier</a></td>
+</tr>
+{% else %}<tr><td colspan="5" class="empty">Aucun article. Chargez les fixtures référentiel.</td></tr>{% endfor %}
+</tbody>
+</table>
+</section>
+{% endblock %}

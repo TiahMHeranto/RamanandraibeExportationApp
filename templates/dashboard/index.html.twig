@@ -4,35 +4,71 @@
 {% block page_title %}Overview{% endblock %}
 {% block page_actions %}
     <a class="btn btn-ghost" href="{{ path('app_arrivage_new') }}">Nouvel arrivage</a>
-    <a class="btn btn-primary" href="{{ path('app_shipment_new') }}">New shipment</a>
+    <a class="btn btn-ghost" href="{{ path('app_traitement_new') }}">Nouveau traitement</a>
+    <a class="btn btn-primary" href="{{ path('app_stock_index') }}">Stock</a>
 {% endblock %}
 
 {% block content %}
 <section class="stat-row stats-6">
+    <article class="stat accent">
+        <span>Stock TV Majunga</span>
+        <strong>{{ tvSolde }} kg</strong>
+    </article>
+    <article class="stat">
+        <span>Kg traités (jour)</span>
+        <strong>{{ kgTraitesJour|number_format(1, '.', ' ') }}</strong>
+    </article>
+    <article class="stat {{ ecartsEquilibre > 0 ? 'accent' : '' }}">
+        <span>Écarts équilibre</span>
+        <strong>{{ ecartsEquilibre }}</strong>
+    </article>
     <article class="stat">
         <span>Personnels</span>
         <strong>{{ personnelCount }}</strong>
     </article>
     <article class="stat">
-        <span>Fournisseurs</span>
-        <strong>{{ fournisseurCount }}</strong>
-    </article>
-    <article class="stat">
-        <span>Hangars</span>
-        <strong>{{ hangarCount }}</strong>
-    </article>
-    <article class="stat accent">
         <span>Arrivages</span>
         <strong>{{ arrivageCount }}</strong>
-    </article>
-    <article class="stat">
-        <span>Clients</span>
-        <strong>{{ clientCount }}</strong>
     </article>
     <article class="stat">
         <span>Shipments</span>
         <strong>{{ shipmentCount }}</strong>
     </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Derniers traitements</h2>
+        <a href="{{ path('app_traitement_index') }}">Voir tout</a>
+    </div>
+    {% if latestTraitements is empty %}
+        <p class="empty">Aucune session de triage pour le moment.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Réf</th>
+                <th>Date</th>
+                <th>Hangar</th>
+                <th>Trieuse</th>
+                <th>Sortie</th>
+                <th>Écart</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in latestTraitements %}
+                <tr>
+                    <td><a href="{{ path('app_traitement_show', {id: t.id}) }}">{{ t.reference }}</a></td>
+                    <td>{{ t.dateTraitement|date('d/m/Y') }}</td>
+                    <td>{{ t.hangar }}</td>
+                    <td>{{ t.trieuse }}</td>
+                    <td>{{ t.poidsSortie }} kg</td>
+                    <td class="{{ t.ecartPoids|abs > 0.5 ? 'text-warn' : '' }}">{{ t.ecartPoids }} kg</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 </section>
 
 <section class="panel">

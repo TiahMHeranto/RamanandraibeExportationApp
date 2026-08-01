@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\RolePersonnel;
 use App\Repository\PersonnelRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -27,6 +28,9 @@ class Personnel
     #[Assert\Length(max: 255)]
     private ?string $nom = null;
 
+    #[ORM\Column(enumType: RolePersonnel::class)]
+    private RolePersonnel $role = RolePersonnel::LesDeux;
+
     #[ORM\Column]
     private bool $actif = true;
 
@@ -42,64 +46,17 @@ class Personnel
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getNumeroPersonnel(): ?string
-    {
-        return $this->numeroPersonnel;
-    }
-
-    public function setNumeroPersonnel(string $numeroPersonnel): static
-    {
-        $this->numeroPersonnel = strtoupper(trim($numeroPersonnel));
-
-        return $this;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = trim($nom);
-
-        return $this;
-    }
-
-    public function isActif(): bool
-    {
-        return $this->actif;
-    }
-
-    public function setActif(bool $actif): static
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): \DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    public function __toString(): string
-    {
-        return sprintf('%s — %s', $this->numeroPersonnel, $this->nom);
-    }
+    public function getId(): ?int { return $this->id; }
+    public function getNumeroPersonnel(): ?string { return $this->numeroPersonnel; }
+    public function setNumeroPersonnel(string $numeroPersonnel): static { $this->numeroPersonnel = strtoupper(trim($numeroPersonnel)); return $this; }
+    public function getNom(): ?string { return $this->nom; }
+    public function setNom(string $nom): static { $this->nom = trim($nom); return $this; }
+    public function getRole(): RolePersonnel { return $this->role; }
+    public function setRole(RolePersonnel $role): static { $this->role = $role; return $this; }
+    public function isActif(): bool { return $this->actif; }
+    public function setActif(bool $actif): static { $this->actif = $actif; return $this; }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+    public function touch(): void { $this->updatedAt = new \DateTimeImmutable(); }
+    public function __toString(): string { return sprintf('%s — %s', $this->numeroPersonnel, $this->nom); }
 }

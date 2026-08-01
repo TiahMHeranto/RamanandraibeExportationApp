@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="panel form-panel" {{ stimulus_controller('traitement-form') }}>
+{{ form_start(form) }}
+<div class="form-grid">
+{{ form_row(form.reference) }}
+{{ form_row(form.dateTraitement) }}
+{{ form_row(form.hangar) }}
+{{ form_row(form.trieuse) }}
+{{ form_row(form.controleuse) }}
+{{ form_row(form.fournisseur) }}
+{{ form_row(form.contrat) }}
+{{ form_row(form.magasin) }}
+{{ form_row(form.articleSource) }}
+{{ form_row(form.couleurSource) }}
+{{ form_row(form.poidsSortie) }}
+<div class="span-2">{{ form_row(form.observations) }}</div>
+</div>
+
+<div class="lines-block">
+<div class="panel-head">
+<h2>Résultats (entrées stock)</h2>
+<button type="button" class="btn btn-ghost" data-action="traitement-form#addLine">Ajouter une ligne</button>
+</div>
+<div
+    class="lines-list"
+    data-traitement-form-target="list"
+    data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}"
+    data-index="{{ form.lignes|length }}"
+>
+{% for line in form.lignes %}
+<div class="line-row" data-traitement-form-target="row">
+<div>
+{{ form_row(line.article) }}
+{{ form_row(line.couleur) }}
+{{ form_row(line.categorie) }}
+{{ form_row(line.poids) }}
+{{ form_row(line.nombre) }}
+</div>
+<button type="button" class="btn btn-ghost" data-action="traitement-form#removeLine">Retirer</button>
+</div>
+{% endfor %}
+</div>
+{% do form.lignes.setRendered() %}
+</div>
+
+<div class="form-actions">
+<a class="btn btn-ghost" href="{{ path('app_traitement_index') }}">Annuler</a>
+<button class="btn btn-primary" type="submit">Enregistrer</button>
+</div>
+{{ form_end(form) }}
+</section>
+{% endblock %}

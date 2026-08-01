@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>{{ traitement.reference }}</title>
+<style>
+body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
+h1 { font-size: 16px; margin: 0 0 8px; }
+h2 { font-size: 13px; margin: 18px 0 6px; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; }
+th { background: #f0f0f0; }
+.meta td { border: none; padding: 2px 8px 2px 0; }
+.foot { margin-top: 16px; color: #555; font-size: 10px; }
+.warn { color: #a33; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Fiche traitement — {{ traitement.reference }}</h1>
+<table class="meta">
+<tr><td><strong>Date</strong></td><td>{{ traitement.dateTraitement|date('d/m/Y') }}</td>
+<td><strong>Hangar</strong></td><td>{{ traitement.hangar }}</td></tr>
+<tr><td><strong>Trieuse</strong></td><td>{{ traitement.trieuse }}</td>
+<td><strong>Contrôleuse</strong></td><td>{{ traitement.controleuse ?: '—' }}</td></tr>
+<tr><td><strong>Fournisseur</strong></td><td>{{ traitement.fournisseur }}</td>
+<td><strong>Contrat</strong></td><td>{{ traitement.contrat ? traitement.contrat.reference : '—' }}</td></tr>
+<tr><td><strong>Magasin</strong></td><td>{{ traitement.magasin.nom }}</td>
+<td><strong>Produit sorti</strong></td><td>{{ traitement.articleSource.libelle }} / {{ traitement.couleurSource.libelle }}</td></tr>
+</table>
+
+<h2>Sortie</h2>
+<p>Poids sortie : <strong>{{ traitement.poidsSortie }} kg</strong></p>
+
+<h2>Entrées / résultats</h2>
+<table>
+<thead><tr><th>Article</th><th>Couleur</th><th>Catégorie</th><th>Poids (kg)</th><th>Nombre</th></tr></thead>
+<tbody>
+{% for l in traitement.lignes %}
+<tr>
+<td>{{ l.article.libelle }}</td>
+<td>{{ l.couleur.libelle }}</td>
+<td>{{ l.categorie.label }}</td>
+<td>{{ l.poids }}</td>
+<td>{{ l.nombre ?: '—' }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<p>
+Σ entrées : <strong>{{ traitement.poidsEntrees }} kg</strong> —
+Écart : <span class="{{ traitement.ecartPoids|abs > 0.5 ? 'warn' : '' }}">{{ traitement.ecartPoids }} kg</span>
+</p>
+
+{% if traitement.observations %}
+<p><strong>Observations :</strong> {{ traitement.observations }}</p>
+{% endif %}
+
+<p class="foot">Généré le {{ generatedAt|date('d/m/Y H:i') }} — Ramanandraibe Exportation</p>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends 'layout.html.twig' %}
+{% block body_class %}{{ parent() }} page-viewport{% endblock %}
+{% block title %}Traitements{% endblock %}
+{% block page_title %}Traitements / triage{% endblock %}
+{% block page_actions %}
+<a class="btn btn-primary" href="{{ path('app_traitement_new') }}">Nouvelle session</a>
+{% endblock %}
+{% block content %}
+<section class="panel panel-fill">
+<div class="panel-head">
+<h2>{{ total }} sessions</h2>
+<form method="get" class="search-form">
+<input type="date" name="date" value="{{ date }}">
+<select name="hangar">
+<option value="">Tous hangars</option>
+{% for h in hangars %}
+<option value="{{ h.id }}" {{ hangarId == h.id ? 'selected' : '' }}>{{ h }}</option>
+{% endfor %}
+</select>
+<button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+</div>
+<div class="table-scroll">
+<table class="table table-sticky">
+<thead>
+<tr>
+<th>Réf</th><th>Date</th><th>Hangar</th><th>Trieuse</th><th>Fournisseur</th>
+<th>Sortie</th><th>Entrées</th><th>Écart</th><th></th>
+</tr>
+</thead>
+<tbody>
+{% for t in traitements %}
+{% set ecart = t.ecartPoids|abs %}
+<tr>
+<td><a href="{{ path('app_traitement_show', {id: t.id}) }}">{{ t.reference }}</a></td>
+<td>{{ t.dateTraitement|date('d/m/Y') }}</td>
+<td>{{ t.hangar }}</td>
+<td>{{ t.trieuse }}</td>
+<td>{{ t.fournisseur.nom }}</td>
+<td>{{ t.poidsSortie }} kg</td>
+<td>{{ t.poidsEntrees }} kg</td>
+<td class="{{ ecart > 0.5 ? 'text-warn' : '' }}">{{ t.ecartPoids }} kg</td>
+<td class="actions"><a href="{{ path('app_traitement_edit', {id: t.id}) }}">Modifier</a></td>
+</tr>
+{% else %}
+<tr><td colspan="9" class="empty">Aucun traitement.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% if pagination.pages > 1 %}
+<nav class="pagination">
+{% if pagination.page > 1 %}
+<a href="{{ path('app_traitement_index', {page: pagination.page - 1, date: date, hangar: hangarId}) }}">←</a>
+{% endif %}
+<span>{{ pagination.page }} / {{ pagination.pages }}</span>
+{% if pagination.page < pagination.pages %}
+<a href="{{ path('app_traitement_index', {page: pagination.page + 1, date: date, hangar: hangarId}) }}">→</a>
+{% endif %}
+</nav>
+{% endif %}
+</section>
+{% endblock %}

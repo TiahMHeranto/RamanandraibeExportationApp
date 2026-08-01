@@ -1,0 +1,49 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ traitement.reference }}{% endblock %}
+{% block page_title %}{{ traitement.reference }}{% endblock %}
+{% block page_actions %}
+<a class="btn btn-ghost" href="{{ path('app_traitement_pdf', {id: traitement.id}) }}">PDF</a>
+<a class="btn btn-primary" href="{{ path('app_traitement_edit', {id: traitement.id}) }}">Modifier</a>
+{% endblock %}
+{% block content %}
+{% set ecart = traitement.ecartPoids|abs %}
+<section class="panel">
+<h2>Session de triage</h2>
+<dl class="meta">
+<div><dt>Date</dt><dd>{{ traitement.dateTraitement|date('d/m/Y') }}</dd></div>
+<div><dt>Hangar</dt><dd>{{ traitement.hangar }}</dd></div>
+<div><dt>Trieuse</dt><dd>{{ traitement.trieuse }}</dd></div>
+<div><dt>Contrôleuse</dt><dd>{{ traitement.controleuse ?: '—' }}</dd></div>
+<div><dt>Fournisseur</dt><dd>{{ traitement.fournisseur }}</dd></div>
+<div><dt>Contrat</dt><dd>{{ traitement.contrat ? traitement.contrat.reference : '—' }}</dd></div>
+<div><dt>Magasin</dt><dd>{{ traitement.magasin.nom }}</dd></div>
+<div><dt>Produit sorti</dt><dd>{{ traitement.articleSource.libelle }} / {{ traitement.couleurSource.libelle }}</dd></div>
+<div><dt>Poids sortie</dt><dd>{{ traitement.poidsSortie }} kg</dd></div>
+<div><dt>Σ entrées</dt><dd>{{ traitement.poidsEntrees }} kg</dd></div>
+<div><dt>Écart</dt><dd class="{{ ecart > 0.5 ? 'text-warn' : '' }}">{{ traitement.ecartPoids }} kg</dd></div>
+</dl>
+{% if traitement.observations %}
+<p>{{ traitement.observations }}</p>
+{% endif %}
+</section>
+
+<section class="panel">
+<div class="panel-head"><h2>Résultats</h2></div>
+<table class="table">
+<thead><tr><th>Article</th><th>Couleur</th><th>Catégorie</th><th>Poids</th><th>Nb</th></tr></thead>
+<tbody>
+{% for l in traitement.lignes %}
+<tr>
+<td>{{ l.article.libelle }}</td>
+<td>{{ l.couleur.libelle }}</td>
+<td>{{ l.categorie.label }}</td>
+<td>{{ l.poids }} kg</td>
+<td>{{ l.nombre ?: '—' }}</td>
+</tr>
+{% else %}
+<tr><td colspan="5" class="empty">Aucune ligne.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</section>
+{% endblock %}

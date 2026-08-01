@@ -1,0 +1,43 @@
+{% extends 'layout.html.twig' %}
+{% block body_class %}{{ parent() }} page-viewport{% endblock %}
+{% block title %}Pointage{% endblock %}
+{% block page_title %}Pointage journalier{% endblock %}
+{% block page_actions %}
+<a class="btn btn-ghost" href="{{ path('app_pointage_rendement') }}">Rendement</a>
+{% endblock %}
+{% block content %}
+<section class="panel panel-fill">
+<div class="panel-head">
+<h2>Présence — {{ date|date('d/m/Y') }}</h2>
+<form method="get" class="search-form">
+<input type="date" name="date" value="{{ date }}">
+<button class="btn btn-ghost" type="submit">Changer</button>
+</form>
+</div>
+<form method="post">
+<div class="table-scroll">
+<table class="table table-sticky">
+<thead><tr><th>N°</th><th>Nom</th><th>Présent</th></tr></thead>
+<tbody>
+{% for p in personnels %}
+{% set pid = p.id %}
+<tr>
+<td>{{ p.numeroPersonnel }}</td>
+<td>{{ p.nom }}</td>
+<td>
+<input type="checkbox" name="present[{{ pid }}]" value="1"
+    {{ existing[pid] is defined and existing[pid].present ? 'checked' : '' }}>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="3" class="empty">Aucun personnel actif.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<div class="form-actions" style="margin-top:1rem">
+<button class="btn btn-primary" type="submit">Enregistrer le pointage</button>
+</div>
+</form>
+</section>
+{% endblock %}

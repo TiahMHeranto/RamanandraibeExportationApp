@@ -1,0 +1,20 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="panel form-panel">
+{{ form_start(form) }}
+<div class="form-grid">
+{{ form_row(form.dateMouvement) }}{{ form_row(form.typeOperation) }}{{ form_row(form.sens) }}
+{{ form_row(form.article) }}{{ form_row(form.couleur) }}{{ form_row(form.magasin) }}
+{{ form_row(form.poids) }}{{ form_row(form.reference) }}{{ form_row(form.fournisseur) }}
+{{ form_row(form.contrat) }}{{ form_row(form.hangar) }}
+<div class="span-2">{{ form_row(form.observations) }}</div>
+</div>
+<div class="form-actions">
+<a class="btn btn-ghost" href="{{ path('app_stock_mouvements') }}">Annuler</a>
+<button class="btn btn-primary" type="submit">Enregistrer</button>
+</div>
+{{ form_end(form) }}
+</section>
+{% endblock %}

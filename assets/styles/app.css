@@ -438,6 +438,7 @@ a.is-disabled {
 
 .flash-success { background: #ecfdf3; color: var(--ok); }
 .flash-error { background: #fef3f2; color: var(--danger); }
+.text-warn { color: var(--danger); font-weight: 600; }
 
 .form-grid {
     display: grid;
